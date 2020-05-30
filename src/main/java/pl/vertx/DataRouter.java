@@ -1,6 +1,7 @@
 package pl.vertx;
 
 import io.vertx.core.AsyncResult;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -35,16 +36,20 @@ public class DataRouter {
     }
 
     private void routeFindAllResponse(AsyncResult<List<JsonObject>> result, RoutingContext routingContext) {
-        routingContext
-                .response()
-                .end(Json.encodePrettily(result.result()));
+        prepareResponse(routingContext, 200).end(Json.encodePrettily(result.result()));
     }
 
     private void routeCreateDataResponse(AsyncResult<String> result, RoutingContext routingContext) {
         if(result.failed()) {
-            routingContext.response().end("Error during insertion");
+            prepareResponse(routingContext, 200).end("Error during insertion");
         } else {
-            routingContext.response().end(result.result());
+            prepareResponse(routingContext, 400).end(result.result());
         }
+    }
+
+    private HttpServerResponse prepareResponse(RoutingContext routingContext, int status) {
+        return routingContext
+                .response()
+                .setStatusCode(status);
     }
 }

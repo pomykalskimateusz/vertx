@@ -17,14 +17,12 @@ public class Repository {
 
     public void createSomeData(Handler<AsyncResult<String>> handleResult) {
         JsonObject object = new JsonObject().put("name", "Alex");
-        mongoClient
-                .insert(COLLECTION, object, handleResult);
+        mongoClient.insert(COLLECTION, object, handleResult);
     }
 
     public void findAll(Handler<AsyncResult<List<JsonObject>>> handleResult) {
         sleepForEventLoopTestPurposes();
-        mongoClient
-                .find(COLLECTION, new JsonObject(), handleResult);
+        mongoClient.find(COLLECTION, new JsonObject(), handleResult);
     }
 
     private void sleepForEventLoopTestPurposes() {
