@@ -42,9 +42,9 @@ public class DataRouter {
 
     private void routeCreateDataResponse(AsyncResult<String> result, RoutingContext routingContext) {
         if(result.failed()) {
-            routingContext.response().end("Insert failed");
+            routingContext.response().end("Error during insertion");
         } else {
-            routingContext.response().end("Insert successful");
+            routingContext.response().end(result.result());
         }
     }
 }
