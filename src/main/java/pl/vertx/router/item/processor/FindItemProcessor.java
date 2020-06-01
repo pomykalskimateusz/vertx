@@ -4,6 +4,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import pl.vertx.AuthenticationService;
 import pl.vertx.repository.item.Item;
+import pl.vertx.router.RoutingContextSupport;
 import pl.vertx.router.item.ItemService;
 
 import java.util.List;
@@ -13,7 +14,6 @@ import java.util.stream.Collectors;
 
 import static pl.vertx.router.Messages.*;
 import static pl.vertx.router.ProcessorUtil.prepareMessage;
-import static pl.vertx.router.ProcessorUtil.prepareResponse;
 import static pl.vertx.router.item.processor.ItemProcessorUtil.extractToken;
 
 public class FindItemProcessor {
@@ -30,7 +30,10 @@ public class FindItemProcessor {
             authenticationService
                     .authenticate(extractToken(routingContext.request()), uuid -> processAuthenticationResponse(routingContext, uuid));
         } else {
-            prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
+            RoutingContextSupport
+                    .of(routingContext)
+                    .jsonResponseWith(400)
+                    .end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
         }
     }
 
@@ -38,14 +41,20 @@ public class FindItemProcessor {
         if(id.isPresent()) {
             itemService.findByOwner(id.get(), result -> routeItemsResponse(routingContext, result));
         } else {
-            prepareResponse(routingContext, 401).end(prepareMessage(DESCRIPTION_KEY, UNAUTHORIZED_MESSAGE));
+            RoutingContextSupport
+                    .of(routingContext)
+                    .jsonResponseWith(401)
+                    .end(prepareMessage(DESCRIPTION_KEY, UNAUTHORIZED_MESSAGE));
         }
     }
 
     private void routeItemsResponse(RoutingContext routingContext, List<Item> items) {
         List<JsonObject> mappedItems = items.stream().map(this::toJson).collect(Collectors.toList());
 
-        prepareResponse(routingContext, 200).end(mappedItems.toString());
+        RoutingContextSupport
+                .of(routingContext)
+                .jsonResponseWith(200)
+                .end(mappedItems.toString());
     }
 
     private JsonObject toJson(Item item) {

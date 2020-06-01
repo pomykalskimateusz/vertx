@@ -3,6 +3,7 @@ package pl.vertx.router.user.processor;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import pl.vertx.EncryptionService;
+import pl.vertx.router.RoutingContextSupport;
 import pl.vertx.router.user.UserService;
 
 import static pl.vertx.router.Messages.*;
@@ -26,22 +27,34 @@ public class RegisterProcessor {
             if(isDataValid(login, password)) {
                 userService.ifUserExists(login, isUserExists -> processRegisterResponse(routingContext, isUserExists, login, encryptionService.encrypt(password)));
             } else {
-                prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
+                RoutingContextSupport
+                        .of(routingContext)
+                        .jsonResponseWith(400)
+                        .end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
             }
         } else {
-            prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, UNSUPPORTED_CONTENT_TYPE));
+            RoutingContextSupport
+                    .of(routingContext)
+                    .jsonResponseWith(400)
+                    .end(prepareMessage(DESCRIPTION_KEY, UNSUPPORTED_CONTENT_TYPE));
         }
     }
 
     private void processRegisterResponse(RoutingContext routingContext, boolean isUserExists, String login, String password) {
         if(isUserExists) {
-            prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, USER_EXISTS_MESSAGE));
+            RoutingContextSupport
+                    .of(routingContext)
+                    .jsonResponseWith(400)
+                    .end(prepareMessage(DESCRIPTION_KEY, USER_EXISTS_MESSAGE));
         } else {
             userService.createUser(login, password, (result) -> routeSuccessfulResponse(routingContext));
         }
     }
 
     private void routeSuccessfulResponse(RoutingContext routingContext) {
-        prepareResponse(routingContext, 200).end(prepareMessage(DESCRIPTION_KEY, REGISTRATION_SUCCESSFUL_MESSAGE));
+        RoutingContextSupport
+                .of(routingContext)
+                .jsonResponseWith(200)
+                .end(prepareMessage(DESCRIPTION_KEY, REGISTRATION_SUCCESSFUL_MESSAGE));
     }
 }

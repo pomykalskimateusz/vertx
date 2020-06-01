@@ -6,6 +6,7 @@ import io.vertx.ext.web.RoutingContext;
 import pl.vertx.AuthenticationService;
 import pl.vertx.EncryptionService;
 import pl.vertx.repository.user.User;
+import pl.vertx.router.RoutingContextSupport;
 import pl.vertx.router.user.UserService;
 
 import java.util.Optional;
@@ -33,19 +34,31 @@ public class LoginProcessor {
             if(isDataValid(login, password)) {
                 userService.ifUserExists(login, encryptionService.encrypt(password), optionalUser -> processLoginResponse(routingContext, optionalUser));
             } else {
-                prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
+                RoutingContextSupport
+                        .of(routingContext)
+                        .jsonResponseWith(400)
+                        .end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
             }
         } else {
-            prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, UNSUPPORTED_CONTENT_TYPE));
+            RoutingContextSupport
+                    .of(routingContext)
+                    .jsonResponseWith(400)
+                    .end(prepareMessage(DESCRIPTION_KEY, UNSUPPORTED_CONTENT_TYPE));
         }
     }
 
     private void processLoginResponse(RoutingContext routingContext, Optional<User> optionalUser) {
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
-            prepareResponse(routingContext, 200).end(prepareMessage(TOKEN_KEY, authenticationService.provideToken(user.getId(), user.getLogin())));
+            RoutingContextSupport
+                    .of(routingContext)
+                    .jsonResponseWith(200)
+                    .end(prepareMessage(TOKEN_KEY, authenticationService.provideToken(user.getId(), user.getLogin())));
         } else {
-            prepareResponse(routingContext, 401).end(prepareMessage(DESCRIPTION_KEY, INVALID_CREDENTIALS_MESSAGE));
+            RoutingContextSupport
+                    .of(routingContext)
+                    .jsonResponseWith(401)
+                    .end(prepareMessage(DESCRIPTION_KEY, INVALID_CREDENTIALS_MESSAGE));
         }
     }
 }
