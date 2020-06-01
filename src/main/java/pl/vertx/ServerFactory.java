@@ -2,6 +2,9 @@ package pl.vertx;
 
 import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.mongo.MongoClient;
+import pl.vertx.common.AuthenticationService;
+import pl.vertx.common.EncryptionService;
+import pl.vertx.common.RequestExecutor;
 import pl.vertx.repository.item.ItemRepository;
 import pl.vertx.repository.user.UserRepository;
 import pl.vertx.router.item.ItemRouter;

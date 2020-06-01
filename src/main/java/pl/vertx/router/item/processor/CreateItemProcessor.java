@@ -3,7 +3,7 @@ package pl.vertx.router.item.processor;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
-import pl.vertx.AuthenticationService;
+import pl.vertx.common.AuthenticationService;
 import pl.vertx.router.item.ItemService;
 
 import java.util.Optional;

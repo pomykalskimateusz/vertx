@@ -3,8 +3,8 @@ package pl.vertx.router.user.processor;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
-import pl.vertx.AuthenticationService;
-import pl.vertx.EncryptionService;
+import pl.vertx.common.AuthenticationService;
+import pl.vertx.common.EncryptionService;
 import pl.vertx.repository.user.User;
 import pl.vertx.router.user.UserService;
 

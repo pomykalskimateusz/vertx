@@ -1,4 +1,4 @@
-package pl.vertx;
+package pl.vertx.common;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.json.JsonObject;

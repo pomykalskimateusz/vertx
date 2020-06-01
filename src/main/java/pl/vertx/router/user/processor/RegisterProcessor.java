@@ -2,7 +2,7 @@ package pl.vertx.router.user.processor;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
-import pl.vertx.EncryptionService;
+import pl.vertx.common.EncryptionService;
 import pl.vertx.router.user.UserService;
 
 import static pl.vertx.router.Messages.*;

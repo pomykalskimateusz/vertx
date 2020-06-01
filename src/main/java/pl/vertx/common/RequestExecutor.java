@@ -1,4 +1,4 @@
-package pl.vertx;
+package pl.vertx.common;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

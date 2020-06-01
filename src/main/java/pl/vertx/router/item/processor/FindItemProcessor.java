@@ -2,7 +2,7 @@ package pl.vertx.router.item.processor;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
-import pl.vertx.AuthenticationService;
+import pl.vertx.common.AuthenticationService;
 import pl.vertx.repository.item.Item;
 import pl.vertx.router.item.ItemService;
 

@@ -2,7 +2,7 @@ package pl.vertx.router.item;
 
 import io.vertx.ext.web.Router;
 
-import pl.vertx.RequestExecutor;
+import pl.vertx.common.RequestExecutor;
 import pl.vertx.router.item.processor.CreateItemProcessor;
 import pl.vertx.router.item.processor.FindItemProcessor;
 

@@ -2,7 +2,7 @@ package pl.vertx.router.user;
 
 import io.vertx.ext.web.Router;
 
-import pl.vertx.RequestExecutor;
+import pl.vertx.common.RequestExecutor;
 import pl.vertx.router.user.processor.LoginProcessor;
 import pl.vertx.router.user.processor.RegisterProcessor;
 
