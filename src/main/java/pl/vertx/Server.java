@@ -16,12 +16,11 @@ public class Server extends AbstractVerticle {
     public void start() {
         Router router = Router.router(vertx);
         MongoClient mongoClient = MongoClient.createShared(vertx, databaseConfiguration());
-
         ServerFactory serverFactory = new ServerFactory(mongoClient, authenticationProvider(), REQUEST_POOL_SIZE);
 
         router.route().handler(BodyHandler.create());
-
         serverFactory.userRouter().route(router);
+        serverFactory.itemRouter().route(router);
         vertx
                 .createHttpServer()
                 .requestHandler(router::accept)
