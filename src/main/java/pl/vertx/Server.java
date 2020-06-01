@@ -2,23 +2,26 @@ package pl.vertx;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.PubSecKeyOptions;
+import io.vertx.ext.auth.jwt.JWTAuth;
+import io.vertx.ext.auth.jwt.JWTAuthOptions;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
 
-//TODO Add dependency injection
 public class Server extends AbstractVerticle {
     private final static int REQUEST_POOL_SIZE = 10;
 
     @Override
     public void start() {
         Router router = Router.router(vertx);
-
         MongoClient mongoClient = MongoClient.createShared(vertx, databaseConfiguration());
-        RequestExecutor requestExecutor = new RequestExecutor(REQUEST_POOL_SIZE);
-        Repository repository = new Repository(mongoClient);
-        DataRouter dataRouter = new DataRouter(router, repository, requestExecutor);
 
-        dataRouter.route();
+        ServerFactory serverFactory = new ServerFactory(mongoClient, authenticationProvider(), REQUEST_POOL_SIZE);
+
+        router.route().handler(BodyHandler.create());
+
+        serverFactory.userRouter().route(router);
         vertx
                 .createHttpServer()
                 .requestHandler(router::accept)
@@ -29,5 +32,15 @@ public class Server extends AbstractVerticle {
         return new JsonObject()
                 .put("connection_string", "mongodb://localhost:27017")
                 .put("db_name", "test");
+    }
+
+    private JWTAuth authenticationProvider() {
+        JWTAuthOptions config = new JWTAuthOptions()
+                .addPubSecKey(new PubSecKeyOptions()
+                        .setAlgorithm("HS256")
+                        .setPublicKey("keyboard cat")
+                        .setSymmetric(true));
+
+        return JWTAuth.create(vertx, config);
     }
 }
