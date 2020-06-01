@@ -10,6 +10,7 @@ import static pl.vertx.router.user.processor.ProcessorUtil.*;
 public class RegisterProcessor {
     private static final String DESCRIPTION_KEY = "description";
     private static final String INVALID_REQUEST_MESSAGE = "Incorrect input json data";
+    private static final String UNSUPPORTED_CONTENT_TYPE = "Unsupported content type";
     private static final String USER_EXISTS_MESSAGE = "User already exists.";
     private static final String REGISTRATION_SUCCESSFUL_MESSAGE = "Registering successfull.";
 
@@ -20,14 +21,18 @@ public class RegisterProcessor {
     }
 
     public void register(RoutingContext routingContext) {
-        JsonObject requestBody = routingContext.getBodyAsJson();
-        String login = requestBody.getString("login");
-        String password = requestBody.getString("password");
+        if(isHeaderValid(routingContext.request())) {
+            JsonObject requestBody = routingContext.getBodyAsJson();
+            String login = requestBody.getString("login");
+            String password = requestBody.getString("password");
 
-        if(isDataValid(login, password)) {
-            userService.ifUserExists(login, (isUserExists) -> processRegisterResponse(routingContext, isUserExists, login, password));
+            if(isDataValid(login, password)) {
+                userService.ifUserExists(login, (isUserExists) -> processRegisterResponse(routingContext, isUserExists, login, password));
+            } else {
+                prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
+            }
         } else {
-            prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
+            prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, UNSUPPORTED_CONTENT_TYPE));
         }
     }
 

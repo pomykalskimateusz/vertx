@@ -14,6 +14,7 @@ import static pl.vertx.router.user.processor.ProcessorUtil.*;
 public class LoginProcessor {
     private static final String DESCRIPTION_KEY = "description";
     private static final String TOKEN_KEY = "token";
+    private static final String UNSUPPORTED_CONTENT_TYPE = "Unsupported content type";
     private static final String INVALID_REQUEST_MESSAGE = "Incorrect input json data";
     private static final String INVALID_CREDENTIALS_MESSAGE = "Incorrect credentials";
 
@@ -26,14 +27,18 @@ public class LoginProcessor {
     }
 
     public void login(RoutingContext routingContext) {
-        JsonObject requestBody = routingContext.getBodyAsJson();
-        String login = requestBody.getString("login");
-        String password = requestBody.getString("password");
+        if(isHeaderValid(routingContext.request())) {
+            JsonObject requestBody = routingContext.getBodyAsJson();
+            String login = requestBody.getString("login");
+            String password = requestBody.getString("password");
 
-        if(isDataValid(login, password)) {
-            userService.ifUserExists(login, password, (optionalUser) -> processLoginResponse(routingContext, optionalUser));
+            if(isDataValid(login, password)) {
+                userService.ifUserExists(login, password, (optionalUser) -> processLoginResponse(routingContext, optionalUser));
+            } else {
+                prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
+            }
         } else {
-            prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
+            prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, UNSUPPORTED_CONTENT_TYPE));
         }
     }
 
