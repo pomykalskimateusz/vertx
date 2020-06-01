@@ -31,13 +31,13 @@ public class FindItemProcessor {
     public void process(RoutingContext routingContext) {
         if(ItemProcessorUtil.isAuthorizationHeaderValid(routingContext.request())) {
             authenticationService
-                    .authenticate(extractToken(routingContext.request()), (uuid) -> processAuthorizationResponse(routingContext, uuid));
+                    .authenticate(extractToken(routingContext.request()), (uuid) -> processAuthenticationResponse(routingContext, uuid));
         } else {
             prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
         }
     }
 
-    private void processAuthorizationResponse(RoutingContext routingContext, Optional<UUID> id) {
+    private void processAuthenticationResponse(RoutingContext routingContext, Optional<UUID> id) {
         if(id.isPresent()) {
             itemService.findByOwner(id.get(), (result) -> routeItemsResponse(routingContext, result));
         } else {
