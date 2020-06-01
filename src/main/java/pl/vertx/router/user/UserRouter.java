@@ -22,6 +22,6 @@ public class UserRouter {
         router.post("/register")
               .handler(routingContext -> requestExecutor.processRequest(() -> registerProcessor.process(routingContext)));
         router.post("/login")
-                .handler(routingContext -> requestExecutor.processRequest(() -> loginProcessor.process(routingContext)));
+              .handler(routingContext -> requestExecutor.processRequest(() -> loginProcessor.process(routingContext)));
     }
 }
