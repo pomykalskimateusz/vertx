@@ -8,15 +8,11 @@ import pl.vertx.router.item.ItemService;
 import java.util.Optional;
 import java.util.UUID;
 
+import static pl.vertx.router.Messages.*;
 import static pl.vertx.router.ProcessorUtil.*;
 import static pl.vertx.router.item.processor.ItemProcessorUtil.*;
 
 public class CreateItemProcessor {
-    private static final String DESCRIPTION_KEY = "description";
-    private static final String SUCCESSFULLY_CREATED_MESSAGE = "Item created successful";
-    private static final String INVALID_REQUEST_MESSAGE = "Incorrect request";
-    private static final String UNAUTHORIZED_MESSAGE = "You have not provided an authentication token, the one provided has expired, was revoked or is not authentic.";
-
     private final ItemService itemService;
     private final AuthenticationService authenticationService;
 

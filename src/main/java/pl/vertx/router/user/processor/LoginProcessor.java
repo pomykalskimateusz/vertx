@@ -10,15 +10,10 @@ import pl.vertx.router.user.UserService;
 
 import java.util.Optional;
 
+import static pl.vertx.router.Messages.*;
 import static pl.vertx.router.ProcessorUtil.*;
 
 public class LoginProcessor {
-    private static final String DESCRIPTION_KEY = "description";
-    private static final String TOKEN_KEY = "token";
-    private static final String UNSUPPORTED_CONTENT_TYPE = "Unsupported content type";
-    private static final String INVALID_REQUEST_MESSAGE = "Incorrect input json data";
-    private static final String INVALID_CREDENTIALS_MESSAGE = "Incorrect credentials";
-
     private final UserService userService;
     private final EncryptionService encryptionService;
     private final AuthenticationService authenticationService;

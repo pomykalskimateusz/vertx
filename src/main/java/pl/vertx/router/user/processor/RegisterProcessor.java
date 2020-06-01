@@ -5,15 +5,10 @@ import io.vertx.ext.web.RoutingContext;
 import pl.vertx.EncryptionService;
 import pl.vertx.router.user.UserService;
 
+import static pl.vertx.router.Messages.*;
 import static pl.vertx.router.ProcessorUtil.*;
 
 public class RegisterProcessor {
-    private static final String DESCRIPTION_KEY = "description";
-    private static final String INVALID_REQUEST_MESSAGE = "Incorrect input json data";
-    private static final String UNSUPPORTED_CONTENT_TYPE = "Unsupported content type";
-    private static final String USER_EXISTS_MESSAGE = "User already exists.";
-    private static final String REGISTRATION_SUCCESSFUL_MESSAGE = "Registering successfull.";
-
     private final UserService userService;
     private final EncryptionService encryptionService;
 
