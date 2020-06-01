@@ -2,6 +2,7 @@ package pl.vertx.router.user.processor;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
+import pl.vertx.EncryptionService;
 import pl.vertx.router.user.UserService;
 
 import static pl.vertx.router.ProcessorUtil.*;
@@ -14,9 +15,11 @@ public class RegisterProcessor {
     private static final String REGISTRATION_SUCCESSFUL_MESSAGE = "Registering successfull.";
 
     private final UserService userService;
+    private final EncryptionService encryptionService;
 
-    public RegisterProcessor(UserService userService) {
+    public RegisterProcessor(UserService userService, EncryptionService encryptionService) {
         this.userService = userService;
+        this.encryptionService = encryptionService;
     }
 
     public void register(RoutingContext routingContext) {
@@ -26,7 +29,7 @@ public class RegisterProcessor {
             String password = requestBody.getString("password");
 
             if(isDataValid(login, password)) {
-                userService.ifUserExists(login, (isUserExists) -> processRegisterResponse(routingContext, isUserExists, login, password));
+                userService.ifUserExists(login, (isUserExists) -> processRegisterResponse(routingContext, isUserExists, login, encryptionService.encrypt(password)));
             } else {
                 prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
             }

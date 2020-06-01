@@ -4,6 +4,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
 import pl.vertx.AuthenticationService;
+import pl.vertx.EncryptionService;
 import pl.vertx.repository.user.User;
 import pl.vertx.router.user.UserService;
 
@@ -19,10 +20,12 @@ public class LoginProcessor {
     private static final String INVALID_CREDENTIALS_MESSAGE = "Incorrect credentials";
 
     private final UserService userService;
+    private final EncryptionService encryptionService;
     private final AuthenticationService authenticationService;
 
-    public LoginProcessor(UserService userService, AuthenticationService authenticationService) {
+    public LoginProcessor(UserService userService, EncryptionService encryptionService, AuthenticationService authenticationService) {
         this.userService = userService;
+        this.encryptionService = encryptionService;
         this.authenticationService = authenticationService;
     }
 
@@ -33,7 +36,7 @@ public class LoginProcessor {
             String password = requestBody.getString("password");
 
             if(isDataValid(login, password)) {
-                userService.ifUserExists(login, password, (optionalUser) -> processLoginResponse(routingContext, optionalUser));
+                userService.ifUserExists(login, encryptionService.encrypt(password), (optionalUser) -> processLoginResponse(routingContext, optionalUser));
             } else {
                 prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
             }

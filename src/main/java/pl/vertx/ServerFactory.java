@@ -13,6 +13,7 @@ import pl.vertx.router.user.processor.RegisterProcessor;
 
 public class ServerFactory {
     private final AuthenticationService authenticationService;
+    private final EncryptionService encryptionService;
     private final UserRepository userRepository;
     private final UserService userService;
     private final LoginProcessor loginProcessor;
@@ -23,12 +24,13 @@ public class ServerFactory {
 
     public ServerFactory(MongoClient mongoClient, JWTAuth authenticationProvider, int requestPoolSize) {
         this.authenticationService = new AuthenticationService(authenticationProvider);
+        this.encryptionService = new EncryptionService();
         this.userRepository = new UserRepository(mongoClient);
         this.userService = new UserService(userRepository);
         this.itemRepository = new ItemRepository(mongoClient);
         this.itemService = new ItemService(itemRepository);
-        this.loginProcessor = new LoginProcessor(userService, authenticationService);
-        this.registerProcessor = new RegisterProcessor(userService);
+        this.loginProcessor = new LoginProcessor(userService, encryptionService, authenticationService);
+        this.registerProcessor = new RegisterProcessor(userService, encryptionService);
         this.requestExecutor = new RequestExecutor(requestPoolSize);
     }
 
