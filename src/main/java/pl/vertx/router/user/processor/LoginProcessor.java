@@ -9,7 +9,7 @@ import pl.vertx.router.user.UserService;
 
 import java.util.Optional;
 
-import static pl.vertx.router.user.processor.ProcessorUtil.*;
+import static pl.vertx.router.ProcessorUtil.*;
 
 public class LoginProcessor {
     private static final String DESCRIPTION_KEY = "description";

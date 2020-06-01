@@ -1,12 +1,12 @@
-package pl.vertx.router.user.processor;
+package pl.vertx.router;
 
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
-class ProcessorUtil {
-    static boolean isHeaderValid(HttpServerRequest request) {
+public class ProcessorUtil {
+    public static boolean isHeaderValid(HttpServerRequest request) {
         String header = request.getHeader("Content-Type");
 
         if(header == null) return false;
@@ -14,20 +14,20 @@ class ProcessorUtil {
         else return false;
     }
 
-    static boolean isDataValid(String login, String password) {
+    public static boolean isDataValid(String login, String password) {
         if(login == null || password == null) return false;
         else if(login.isEmpty() || password.isEmpty()) return false;
         else return true;
     }
 
-    static HttpServerResponse prepareResponse(RoutingContext routingContext, int statusCode) {
+    public static HttpServerResponse prepareResponse(RoutingContext routingContext, int statusCode) {
         return routingContext
                 .response()
                 .putHeader("Content-Type", "application/json")
                 .setStatusCode(statusCode);
     }
 
-    static String prepareMessage(String key, String message) {
+    public static String prepareMessage(String key, String message) {
         return new JsonObject()
                 .put(key, message)
                 .toString();

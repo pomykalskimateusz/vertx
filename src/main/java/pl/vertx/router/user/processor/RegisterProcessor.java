@@ -1,11 +1,10 @@
 package pl.vertx.router.user.processor;
 
-import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import pl.vertx.router.user.UserService;
 
-import static pl.vertx.router.user.processor.ProcessorUtil.*;
+import static pl.vertx.router.ProcessorUtil.*;
 
 public class RegisterProcessor {
     private static final String DESCRIPTION_KEY = "description";
