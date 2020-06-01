@@ -2,7 +2,7 @@ package pl.vertx.router.item.processor;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
-import pl.vertx.AuthorizationService;
+import pl.vertx.AuthenticationService;
 import pl.vertx.router.item.ItemService;
 
 import java.util.Optional;
@@ -18,11 +18,11 @@ public class CreateItemProcessor {
     private static final String UNAUTHORIZED_MESSAGE = "You have not provided an authentication token, the one provided has expired, was revoked or is not authentic.";
 
     private final ItemService itemService;
-    private final AuthorizationService authorizationService;
+    private final AuthenticationService authenticationService;
 
-    public CreateItemProcessor(ItemService itemService, AuthorizationService authorizationService) {
+    public CreateItemProcessor(ItemService itemService, AuthenticationService authenticationService) {
         this.itemService = itemService;
-        this.authorizationService = authorizationService;
+        this.authenticationService = authenticationService;
     }
 
     public void process(RoutingContext routingContext) {
@@ -31,7 +31,7 @@ public class CreateItemProcessor {
             String name = requestBody.getString("title");
 
             if(isNameValid(name)) {
-                authorizationService
+                authenticationService
                         .authenticate(extractToken(routingContext.request()), (uuid) -> processAuthorizationResponse(routingContext, uuid, name));
             } else {
                 prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
