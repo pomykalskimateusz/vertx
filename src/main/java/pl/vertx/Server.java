@@ -13,7 +13,7 @@ public class Server extends AbstractVerticle {
     private static final int REQUEST_POOL_SIZE = 10;
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         Router router = Router.router(vertx);
         MongoClient mongoClient = MongoClient.createShared(vertx, databaseConfiguration());
         ServerFactory serverFactory = new ServerFactory(mongoClient, authenticationProvider(), REQUEST_POOL_SIZE);

@@ -26,12 +26,21 @@ public class RegisterProcessor {
 
             if(isDataValid(login, password)) {
                 userService
-                        .checkIfUserExists(login, isUserExists -> processRegister(routingContext, isUserExists, login, encryptionService.encrypt(password)));
+                    .checkIfUserExists(login, isUserExists -> processRegister(routingContext, isUserExists, login, tryToEncryptPassword(routingContext, password)));
             } else {
                 routeInvalidResponse(routingContext);
             }
         } else {
             routeUnsupportedContentTypeResponse(routingContext);
+        }
+    }
+
+    private String tryToEncryptPassword(RoutingContext routingContext, String password) {
+        try {
+            return encryptionService.encrypt(password);
+        } catch (Exception ex) {
+            routeInternalErrorResponse(routingContext);
+            return null;
         }
     }
 

@@ -29,7 +29,7 @@ public class ServerFactory {
     private final FindItemProcessor findItemProcessor;
     private final RequestExecutor requestExecutor;
 
-    public ServerFactory(MongoClient mongoClient, JWTAuth authenticationProvider, int requestPoolSize) {
+    public ServerFactory(MongoClient mongoClient, JWTAuth authenticationProvider, int requestPoolSize) throws Exception {
         this.authenticationService = new AuthenticationService(authenticationProvider);
         this.encryptionService = new EncryptionService();
         this.userRepository = new UserRepository(mongoClient);

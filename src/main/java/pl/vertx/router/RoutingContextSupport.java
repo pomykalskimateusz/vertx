@@ -7,6 +7,12 @@ import io.vertx.ext.web.RoutingContext;
 import static pl.vertx.router.Messages.*;
 
 public class RoutingContextSupport {
+    public static void routeInternalErrorResponse(RoutingContext routingContext) {
+        routingContext
+                .response()
+                .setStatusCode(500)
+                .end();
+    }
     public static void routeInvalidResponse(RoutingContext routingContext) {
         jsonResponseWith(routingContext, 400)
                 .end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));

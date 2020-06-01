@@ -32,7 +32,11 @@ public class LoginProcessor {
             String password = requestBody.getString("password");
 
             if(isDataValid(login, password)) {
-                userService.fetchIfUserExists(login, encryptionService.encrypt(password), optionalUser -> processLogin(routingContext, optionalUser));
+                try {
+                    userService.fetchIfUserExists(login, encryptionService.encrypt(password), optionalUser -> processLogin(routingContext, optionalUser));
+                } catch (Exception ex) {
+                    routeInternalErrorResponse(routingContext);
+                }
             } else {
                 routeInvalidResponse(routingContext);
             }
