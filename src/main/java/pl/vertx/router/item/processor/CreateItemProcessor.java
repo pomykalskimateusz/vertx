@@ -28,7 +28,7 @@ public class CreateItemProcessor {
     public void process(RoutingContext routingContext) {
         if(isHeaderValid(routingContext.request()) && isAuthorizationHeaderValid(routingContext.request())) {
             JsonObject requestBody = routingContext.getBodyAsJson();
-            String name = requestBody.getString("name");
+            String name = requestBody.getString("title");
 
             if(isNameValid(name)) {
                 authenticationService

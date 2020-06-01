@@ -5,7 +5,6 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 
-import java.util.List;
 import java.util.UUID;
 
 public class UserRepository {

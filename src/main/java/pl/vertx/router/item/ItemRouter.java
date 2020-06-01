@@ -19,8 +19,8 @@ public class ItemRouter {
 
     public void route(Router router) {
         router.post("/items")
-               .handler(routingContext -> requestExecutor.processRequest(() -> createItemProcessor.process(routingContext)));
+              .handler(routingContext -> requestExecutor.processRequest(() -> createItemProcessor.process(routingContext)));
         router.get("/items")
-                .handler(routingContext -> requestExecutor.processRequest(() -> findItemProcessor.process(routingContext)));
+              .handler(routingContext -> requestExecutor.processRequest(() -> findItemProcessor.process(routingContext)));
     }
 }
