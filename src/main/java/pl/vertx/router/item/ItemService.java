@@ -16,11 +16,11 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    void createBook(UUID owner, String name, Consumer<String> function) {
+    public void createBook(UUID owner, String name, Consumer<String> function) {
         itemRepository.createItem(owner, name, (result) -> function.accept(result.result()));
     }
 
-    void findByOwner(UUID owner, Consumer<List<Item>> function) {
+    public void findByOwner(UUID owner, Consumer<List<Item>> function) {
         itemRepository.findByOwner(owner, (result) -> function.accept(mapResponse(result.result())));
     }
 

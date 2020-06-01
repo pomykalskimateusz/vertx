@@ -15,6 +15,14 @@ public class Item {
         this.name = name;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public JsonObject toJson() {
         return new JsonObject()
                 .put("id", id.toString())

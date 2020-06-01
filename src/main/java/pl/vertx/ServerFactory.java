@@ -6,6 +6,8 @@ import pl.vertx.repository.item.ItemRepository;
 import pl.vertx.repository.user.UserRepository;
 import pl.vertx.router.item.ItemRouter;
 import pl.vertx.router.item.ItemService;
+import pl.vertx.router.item.processor.CreateItemProcessor;
+import pl.vertx.router.item.processor.FindItemProcessor;
 import pl.vertx.router.user.UserRouter;
 import pl.vertx.router.user.UserService;
 import pl.vertx.router.user.processor.LoginProcessor;
@@ -20,6 +22,8 @@ public class ServerFactory {
     private final RegisterProcessor registerProcessor;
     private final ItemRepository itemRepository;
     private final ItemService itemService;
+    private final CreateItemProcessor createItemProcessor;
+    private final FindItemProcessor findItemProcessor;
     private final RequestExecutor requestExecutor;
 
     public ServerFactory(MongoClient mongoClient, JWTAuth authenticationProvider, int requestPoolSize) {
@@ -29,6 +33,8 @@ public class ServerFactory {
         this.userService = new UserService(userRepository);
         this.itemRepository = new ItemRepository(mongoClient);
         this.itemService = new ItemService(itemRepository);
+        this.createItemProcessor = new CreateItemProcessor(itemService, authenticationService);
+        this.findItemProcessor = new FindItemProcessor(itemService, authenticationService);
         this.loginProcessor = new LoginProcessor(userService, encryptionService, authenticationService);
         this.registerProcessor = new RegisterProcessor(userService, encryptionService);
         this.requestExecutor = new RequestExecutor(requestPoolSize);
@@ -39,6 +45,6 @@ public class ServerFactory {
     }
 
     public ItemRouter itemRouter() {
-        return new ItemRouter(itemService, authenticationService, requestExecutor);
+        return new ItemRouter(createItemProcessor, findItemProcessor, requestExecutor);
     }
 }
