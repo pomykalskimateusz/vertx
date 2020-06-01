@@ -22,7 +22,7 @@ public class RegisterProcessor {
         this.encryptionService = encryptionService;
     }
 
-    public void register(RoutingContext routingContext) {
+    public void process(RoutingContext routingContext) {
         if(isHeaderValid(routingContext.request())) {
             JsonObject requestBody = routingContext.getBodyAsJson();
             String login = requestBody.getString("login");

@@ -29,7 +29,7 @@ public class LoginProcessor {
         this.authenticationService = authenticationService;
     }
 
-    public void login(RoutingContext routingContext) {
+    public void process(RoutingContext routingContext) {
         if(isHeaderValid(routingContext.request())) {
             JsonObject requestBody = routingContext.getBodyAsJson();
             String login = requestBody.getString("login");
