@@ -3,11 +3,11 @@ package pl.vertx.router.user.processor;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import pl.vertx.EncryptionService;
-import pl.vertx.router.RoutingContextSupport;
 import pl.vertx.router.user.UserService;
 
 import static pl.vertx.router.Messages.*;
 import static pl.vertx.router.ProcessorUtil.*;
+import static pl.vertx.router.RoutingContextSupport.*;
 
 public class RegisterProcessor {
     private final UserService userService;
@@ -19,32 +19,25 @@ public class RegisterProcessor {
     }
 
     public void process(RoutingContext routingContext) {
-        if(isHeaderValid(routingContext.request())) {
+        if(isContentTypeHeaderValid(routingContext.request())) {
             JsonObject requestBody = routingContext.getBodyAsJson();
             String login = requestBody.getString("login");
             String password = requestBody.getString("password");
 
             if(isDataValid(login, password)) {
-                userService.checkIfUserExists(login, isUserExists -> processRegister(routingContext, isUserExists, login, encryptionService.encrypt(password)));
+                userService
+                        .checkIfUserExists(login, isUserExists -> processRegister(routingContext, isUserExists, login, encryptionService.encrypt(password)));
             } else {
-                RoutingContextSupport
-                        .of(routingContext)
-                        .jsonResponseWith(400)
-                        .end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
+                routeInvalidResponse(routingContext);
             }
         } else {
-            RoutingContextSupport
-                    .of(routingContext)
-                    .jsonResponseWith(400)
-                    .end(prepareMessage(DESCRIPTION_KEY, UNSUPPORTED_CONTENT_TYPE));
+            routeUnsupportedContentTypeResponse(routingContext);
         }
     }
 
     private void processRegister(RoutingContext routingContext, boolean isUserExists, String login, String password) {
         if(isUserExists) {
-            RoutingContextSupport
-                    .of(routingContext)
-                    .jsonResponseWith(400)
+            jsonResponseWith(routingContext, 400)
                     .end(prepareMessage(DESCRIPTION_KEY, USER_EXISTS_MESSAGE));
         } else {
             userService.createUser(login, password, (result) -> routeSuccessfulResponse(routingContext));
@@ -52,9 +45,7 @@ public class RegisterProcessor {
     }
 
     private void routeSuccessfulResponse(RoutingContext routingContext) {
-        RoutingContextSupport
-                .of(routingContext)
-                .jsonResponseWith(200)
+        jsonResponseWith(routingContext, 200)
                 .end(prepareMessage(DESCRIPTION_KEY, REGISTRATION_SUCCESSFUL_MESSAGE));
     }
 }

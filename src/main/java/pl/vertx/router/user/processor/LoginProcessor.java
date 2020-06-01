@@ -6,13 +6,13 @@ import io.vertx.ext.web.RoutingContext;
 import pl.vertx.AuthenticationService;
 import pl.vertx.EncryptionService;
 import pl.vertx.repository.user.User;
-import pl.vertx.router.RoutingContextSupport;
 import pl.vertx.router.user.UserService;
 
 import java.util.Optional;
 
 import static pl.vertx.router.Messages.*;
 import static pl.vertx.router.ProcessorUtil.*;
+import static pl.vertx.router.RoutingContextSupport.*;
 
 public class LoginProcessor {
     private final UserService userService;
@@ -26,7 +26,7 @@ public class LoginProcessor {
     }
 
     public void process(RoutingContext routingContext) {
-        if(isHeaderValid(routingContext.request())) {
+        if(isContentTypeHeaderValid(routingContext.request())) {
             JsonObject requestBody = routingContext.getBodyAsJson();
             String login = requestBody.getString("login");
             String password = requestBody.getString("password");
@@ -34,30 +34,20 @@ public class LoginProcessor {
             if(isDataValid(login, password)) {
                 userService.fetchIfUserExists(login, encryptionService.encrypt(password), optionalUser -> processLogin(routingContext, optionalUser));
             } else {
-                RoutingContextSupport
-                        .of(routingContext)
-                        .jsonResponseWith(400)
-                        .end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
+                routeInvalidResponse(routingContext);
             }
         } else {
-            RoutingContextSupport
-                    .of(routingContext)
-                    .jsonResponseWith(400)
-                    .end(prepareMessage(DESCRIPTION_KEY, UNSUPPORTED_CONTENT_TYPE));
+            routeUnsupportedContentTypeResponse(routingContext);
         }
     }
 
     private void processLogin(RoutingContext routingContext, Optional<User> optionalUser) {
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
-            RoutingContextSupport
-                    .of(routingContext)
-                    .jsonResponseWith(200)
+            jsonResponseWith(routingContext, 200)
                     .end(prepareMessage(TOKEN_KEY, authenticationService.provideToken(user.getId(), user.getLogin())));
         } else {
-            RoutingContextSupport
-                    .of(routingContext)
-                    .jsonResponseWith(401)
+            jsonResponseWith(routingContext, 401)
                     .end(prepareMessage(DESCRIPTION_KEY, INVALID_CREDENTIALS_MESSAGE));
         }
     }
