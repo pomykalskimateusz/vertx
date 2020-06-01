@@ -5,7 +5,6 @@ import io.vertx.core.json.JsonObject;
 import pl.vertx.repository.user.User;
 import pl.vertx.repository.user.UserRepository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -17,7 +16,7 @@ public class UserService {
     }
 
     public void ifUserExists(String login, Consumer<Boolean> function) {
-        userRepository.findByLogin(login, (result) -> function.accept(!isNotExistsIn(result)));
+        userRepository.findByLogin(login, (result) -> function.accept(result.result() != null));
     }
 
     public void ifUserExists(String login, String password, Consumer<Optional<User>> function) {
@@ -32,11 +31,5 @@ public class UserService {
 
     public void createUser(String login, String password, Consumer<String> function) {
         userRepository.createUser(login, password, (result) -> function.accept(result.result()));
-    }
-
-    private boolean isNotExistsIn(AsyncResult<List<JsonObject>> result) {
-        return result
-                .result()
-                .isEmpty();
     }
 }

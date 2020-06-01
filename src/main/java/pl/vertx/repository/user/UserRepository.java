@@ -21,8 +21,8 @@ public class UserRepository {
         mongoClient.insert(USER_COLLECTION, prepareUser(login, password).toJson(), handleResult);
     }
 
-    public void findByLogin(String login, Handler<AsyncResult<List<JsonObject>>> handleResult) {
-        mongoClient.find(USER_COLLECTION, new JsonObject().put("login", login),  handleResult);
+    public void findByLogin(String login, Handler<AsyncResult<JsonObject>> handleResult) {
+        mongoClient.findOne(USER_COLLECTION, new JsonObject().put("login", login), null,  handleResult);
     }
 
     public void findByLoginAndPassword(String login, String password, Handler<AsyncResult<JsonObject>> handleResult) {
