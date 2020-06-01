@@ -8,11 +8,15 @@ import pl.vertx.router.item.ItemRouter;
 import pl.vertx.router.item.ItemService;
 import pl.vertx.router.user.UserRouter;
 import pl.vertx.router.user.UserService;
+import pl.vertx.router.user.processor.LoginProcessor;
+import pl.vertx.router.user.processor.RegisterProcessor;
 
 public class ServerFactory {
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final LoginProcessor loginProcessor;
+    private final RegisterProcessor registerProcessor;
     private final ItemRepository itemRepository;
     private final ItemService itemService;
     private final RequestExecutor requestExecutor;
@@ -23,11 +27,13 @@ public class ServerFactory {
         this.userService = new UserService(userRepository);
         this.itemRepository = new ItemRepository(mongoClient);
         this.itemService = new ItemService(itemRepository);
+        this.loginProcessor = new LoginProcessor(userService, authenticationService);
+        this.registerProcessor = new RegisterProcessor(userService);
         this.requestExecutor = new RequestExecutor(requestPoolSize);
     }
 
     public UserRouter userRouter() {
-        return new UserRouter(userService, authenticationService, requestExecutor);
+        return new UserRouter(loginProcessor, registerProcessor, requestExecutor);
     }
 
     public ItemRouter itemRouter() {
