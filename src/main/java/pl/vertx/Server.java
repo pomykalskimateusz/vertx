@@ -10,7 +10,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 
 public class Server extends AbstractVerticle {
-    private final static int REQUEST_POOL_SIZE = 10;
+    private static final int REQUEST_POOL_SIZE = 10;
 
     @Override
     public void start() {
