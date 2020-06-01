@@ -16,7 +16,7 @@ public class Server extends AbstractVerticle {
     public void start() {
         Router router = Router.router(vertx);
         MongoClient mongoClient = MongoClient.createShared(vertx, databaseConfiguration());
-        ServerFactory serverFactory = new ServerFactory(mongoClient, authenticationProvider(), REQUEST_POOL_SIZE);
+        ServerFactory serverFactory = new ServerFactory(mongoClient, authorizationProvider(), REQUEST_POOL_SIZE);
 
         router.route().handler(BodyHandler.create());
         serverFactory.userRouter().route(router);
@@ -33,7 +33,7 @@ public class Server extends AbstractVerticle {
                 .put("db_name", "test");
     }
 
-    private JWTAuth authenticationProvider() {
+    private JWTAuth authorizationProvider() {
         JWTAuthOptions config = new JWTAuthOptions()
                 .addPubSecKey(new PubSecKeyOptions()
                         .setAlgorithm("HS256")

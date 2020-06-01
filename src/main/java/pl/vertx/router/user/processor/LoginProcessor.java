@@ -3,7 +3,7 @@ package pl.vertx.router.user.processor;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
-import pl.vertx.AuthenticationService;
+import pl.vertx.AuthorizationService;
 import pl.vertx.EncryptionService;
 import pl.vertx.repository.user.User;
 import pl.vertx.router.user.UserService;
@@ -21,12 +21,12 @@ public class LoginProcessor {
 
     private final UserService userService;
     private final EncryptionService encryptionService;
-    private final AuthenticationService authenticationService;
+    private final AuthorizationService authorizationService;
 
-    public LoginProcessor(UserService userService, EncryptionService encryptionService, AuthenticationService authenticationService) {
+    public LoginProcessor(UserService userService, EncryptionService encryptionService, AuthorizationService authorizationService) {
         this.userService = userService;
         this.encryptionService = encryptionService;
-        this.authenticationService = authenticationService;
+        this.authorizationService = authorizationService;
     }
 
     public void process(RoutingContext routingContext) {
@@ -48,7 +48,7 @@ public class LoginProcessor {
     private void processLoginResponse(RoutingContext routingContext, Optional<User> optionalUser) {
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
-            prepareResponse(routingContext, 200).end(prepareMessage(TOKEN_KEY, authenticationService.provideToken(user.getId(), user.getLogin())));
+            prepareResponse(routingContext, 200).end(prepareMessage(TOKEN_KEY, authorizationService.provideToken(user.getId(), user.getLogin())));
         } else {
             prepareResponse(routingContext, 401).end(prepareMessage(DESCRIPTION_KEY, INVALID_CREDENTIALS_MESSAGE));
         }

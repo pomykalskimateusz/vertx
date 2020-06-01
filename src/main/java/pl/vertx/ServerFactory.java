@@ -14,7 +14,7 @@ import pl.vertx.router.user.processor.LoginProcessor;
 import pl.vertx.router.user.processor.RegisterProcessor;
 
 public class ServerFactory {
-    private final AuthenticationService authenticationService;
+    private final AuthorizationService authorizationService;
     private final EncryptionService encryptionService;
     private final UserRepository userRepository;
     private final UserService userService;
@@ -27,15 +27,15 @@ public class ServerFactory {
     private final RequestExecutor requestExecutor;
 
     public ServerFactory(MongoClient mongoClient, JWTAuth authenticationProvider, int requestPoolSize) {
-        this.authenticationService = new AuthenticationService(authenticationProvider);
+        this.authorizationService = new AuthorizationService(authenticationProvider);
         this.encryptionService = new EncryptionService();
         this.userRepository = new UserRepository(mongoClient);
         this.userService = new UserService(userRepository);
         this.itemRepository = new ItemRepository(mongoClient);
         this.itemService = new ItemService(itemRepository);
-        this.createItemProcessor = new CreateItemProcessor(itemService, authenticationService);
-        this.findItemProcessor = new FindItemProcessor(itemService, authenticationService);
-        this.loginProcessor = new LoginProcessor(userService, encryptionService, authenticationService);
+        this.createItemProcessor = new CreateItemProcessor(itemService, authorizationService);
+        this.findItemProcessor = new FindItemProcessor(itemService, authorizationService);
+        this.loginProcessor = new LoginProcessor(userService, encryptionService, authorizationService);
         this.registerProcessor = new RegisterProcessor(userService, encryptionService);
         this.requestExecutor = new RequestExecutor(requestPoolSize);
     }

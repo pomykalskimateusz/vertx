@@ -9,10 +9,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class AuthenticationService {
+public class AuthorizationService {
     private final JWTAuth authProvider;
 
-    public AuthenticationService(JWTAuth authProvider) {
+    public AuthorizationService(JWTAuth authProvider) {
         this.authProvider = authProvider;
     }
 
