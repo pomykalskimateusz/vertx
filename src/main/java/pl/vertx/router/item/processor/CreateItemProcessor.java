@@ -28,7 +28,7 @@ public class CreateItemProcessor {
 
             if(isNameValid(name)) {
                 authenticationService
-                        .authenticate(extractToken(routingContext.request()), (uuid) -> processAuthenticationResponse(routingContext, uuid, name));
+                        .authenticate(extractToken(routingContext.request()), uuid -> processAuthenticationResponse(routingContext, uuid, name));
             } else {
                 prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
             }
@@ -40,7 +40,7 @@ public class CreateItemProcessor {
     private void processAuthenticationResponse(RoutingContext routingContext, Optional<UUID> id, String name) {
         if(id.isPresent()) {
             itemService
-                    .createBook(id.get(), name, (result) -> routeSuccessfulResponse(routingContext));
+                    .createBook(id.get(), name, result -> routeSuccessfulResponse(routingContext));
         } else {
             prepareResponse(routingContext, 401).end(prepareMessage(DESCRIPTION_KEY, UNAUTHORIZED_MESSAGE));
         }

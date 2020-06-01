@@ -10,18 +10,18 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ItemService {
-    final private ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
 
     public ItemService(ItemRepository itemRepository) {
         this.itemRepository = itemRepository;
     }
 
     public void createBook(UUID owner, String name, Consumer<String> function) {
-        itemRepository.createItem(owner, name, (result) -> function.accept(result.result()));
+        itemRepository.createItem(owner, name, result -> function.accept(result.result()));
     }
 
     public void findByOwner(UUID owner, Consumer<List<Item>> function) {
-        itemRepository.findByOwner(owner, (result) -> function.accept(mapResponse(result.result())));
+        itemRepository.findByOwner(owner, result -> function.accept(mapResponse(result.result())));
     }
 
     private List<Item> mapResponse(List<JsonObject> items) {

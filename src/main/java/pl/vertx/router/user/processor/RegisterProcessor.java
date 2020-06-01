@@ -24,7 +24,7 @@ public class RegisterProcessor {
             String password = requestBody.getString("password");
 
             if(isDataValid(login, password)) {
-                userService.ifUserExists(login, (isUserExists) -> processRegisterResponse(routingContext, isUserExists, login, encryptionService.encrypt(password)));
+                userService.ifUserExists(login, isUserExists -> processRegisterResponse(routingContext, isUserExists, login, encryptionService.encrypt(password)));
             } else {
                 prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
             }

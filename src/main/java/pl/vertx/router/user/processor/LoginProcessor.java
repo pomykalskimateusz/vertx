@@ -31,7 +31,7 @@ public class LoginProcessor {
             String password = requestBody.getString("password");
 
             if(isDataValid(login, password)) {
-                userService.ifUserExists(login, encryptionService.encrypt(password), (optionalUser) -> processLoginResponse(routingContext, optionalUser));
+                userService.ifUserExists(login, encryptionService.encrypt(password), optionalUser -> processLoginResponse(routingContext, optionalUser));
             } else {
                 prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
             }

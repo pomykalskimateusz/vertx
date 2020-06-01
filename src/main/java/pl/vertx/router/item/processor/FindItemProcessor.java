@@ -28,7 +28,7 @@ public class FindItemProcessor {
     public void process(RoutingContext routingContext) {
         if(ItemProcessorUtil.isAuthorizationHeaderValid(routingContext.request())) {
             authenticationService
-                    .authenticate(extractToken(routingContext.request()), (uuid) -> processAuthenticationResponse(routingContext, uuid));
+                    .authenticate(extractToken(routingContext.request()), uuid -> processAuthenticationResponse(routingContext, uuid));
         } else {
             prepareResponse(routingContext, 400).end(prepareMessage(DESCRIPTION_KEY, INVALID_REQUEST_MESSAGE));
         }
@@ -36,7 +36,7 @@ public class FindItemProcessor {
 
     private void processAuthenticationResponse(RoutingContext routingContext, Optional<UUID> id) {
         if(id.isPresent()) {
-            itemService.findByOwner(id.get(), (result) -> routeItemsResponse(routingContext, result));
+            itemService.findByOwner(id.get(), result -> routeItemsResponse(routingContext, result));
         } else {
             prepareResponse(routingContext, 401).end(prepareMessage(DESCRIPTION_KEY, UNAUTHORIZED_MESSAGE));
         }

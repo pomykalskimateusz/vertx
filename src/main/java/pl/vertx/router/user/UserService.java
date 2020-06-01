@@ -16,11 +16,11 @@ public class UserService {
     }
 
     public void ifUserExists(String login, Consumer<Boolean> function) {
-        userRepository.findByLogin(login, (result) -> function.accept(result.result() != null));
+        userRepository.findByLogin(login, result -> function.accept(result.result() != null));
     }
 
     public void ifUserExists(String login, String password, Consumer<Optional<User>> function) {
-        userRepository.findByLoginAndPassword(login, password, (result) -> function.accept(userFromResult(result)));
+        userRepository.findByLoginAndPassword(login, password, result -> function.accept(userFromResult(result)));
     }
 
     private Optional<User> userFromResult(AsyncResult<JsonObject> result) {
@@ -30,6 +30,6 @@ public class UserService {
     }
 
     public void createUser(String login, String password, Consumer<String> function) {
-        userRepository.createUser(login, password, (result) -> function.accept(result.result()));
+        userRepository.createUser(login, password, result -> function.accept(result.result()));
     }
 }
