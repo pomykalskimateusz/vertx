@@ -25,7 +25,7 @@ public class RegisterProcessor {
             String password = requestBody.getString("password");
 
             if(isDataValid(login, password)) {
-                userService.ifUserExists(login, isUserExists -> processRegisterResponse(routingContext, isUserExists, login, encryptionService.encrypt(password)));
+                userService.checkIfUserExists(login, isUserExists -> processRegister(routingContext, isUserExists, login, encryptionService.encrypt(password)));
             } else {
                 RoutingContextSupport
                         .of(routingContext)
@@ -40,7 +40,7 @@ public class RegisterProcessor {
         }
     }
 
-    private void processRegisterResponse(RoutingContext routingContext, boolean isUserExists, String login, String password) {
+    private void processRegister(RoutingContext routingContext, boolean isUserExists, String login, String password) {
         if(isUserExists) {
             RoutingContextSupport
                     .of(routingContext)

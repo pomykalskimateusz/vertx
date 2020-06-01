@@ -32,7 +32,7 @@ public class LoginProcessor {
             String password = requestBody.getString("password");
 
             if(isDataValid(login, password)) {
-                userService.ifUserExists(login, encryptionService.encrypt(password), optionalUser -> processLoginResponse(routingContext, optionalUser));
+                userService.fetchIfUserExists(login, encryptionService.encrypt(password), optionalUser -> processLogin(routingContext, optionalUser));
             } else {
                 RoutingContextSupport
                         .of(routingContext)
@@ -47,7 +47,7 @@ public class LoginProcessor {
         }
     }
 
-    private void processLoginResponse(RoutingContext routingContext, Optional<User> optionalUser) {
+    private void processLogin(RoutingContext routingContext, Optional<User> optionalUser) {
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
             RoutingContextSupport

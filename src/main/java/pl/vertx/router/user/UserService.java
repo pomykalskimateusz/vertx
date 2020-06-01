@@ -15,11 +15,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void ifUserExists(String login, Consumer<Boolean> function) {
+    public void checkIfUserExists(String login, Consumer<Boolean> function) {
         userRepository.findByLogin(login, result -> function.accept(result.result() != null));
     }
 
-    public void ifUserExists(String login, String password, Consumer<Optional<User>> function) {
+    public void fetchIfUserExists(String login, String password, Consumer<Optional<User>> function) {
         userRepository.findByLoginAndPassword(login, password, result -> function.accept(userFromResult(result)));
     }
 
