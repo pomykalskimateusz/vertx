@@ -11,6 +11,9 @@ import io.vertx.ext.web.handler.BodyHandler;
 
 public class Server extends AbstractVerticle {
     private static final int REQUEST_POOL_SIZE = 10;
+    private static final String DATABASE_CONNECTION_STRING = "mongodb://localhost:27017";
+    private static final String DATABASE_NAME = "test";
+
 
     @Override
     public void start() throws Exception {
@@ -29,8 +32,8 @@ public class Server extends AbstractVerticle {
 
     private JsonObject databaseConfiguration() {
         return new JsonObject()
-                .put("connection_string", "mongodb://localhost:27017")
-                .put("db_name", "test");
+                .put("connection_string", DATABASE_CONNECTION_STRING)
+                .put("db_name", DATABASE_NAME);
     }
 
     private JWTAuth authenticationProvider() {

@@ -49,8 +49,7 @@ public class RegisterProcessor {
                     .end(prepareMessage(DESCRIPTION_KEY, USER_EXISTS_MESSAGE));
         } else if (password == null) {
             routeInternalErrorResponse(routingContext);
-        }
-        else {
+        } else {
             userService.createUser(login, password, (result) -> routeSuccessfulResponse(routingContext));
         }
     }
