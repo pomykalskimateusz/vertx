@@ -26,7 +26,7 @@ public class RegisterProcessor {
 
             if(isDataValid(login, password)) {
                 userService
-                    .checkIfUserExists(login, isUserExists -> processRegister(routingContext, isUserExists, login, tryToEncryptPassword(routingContext, password)));
+                    .checkIfUserExists(login, isUserExists -> processRegister(routingContext, isUserExists, login, tryToEncryptPassword(password)));
             } else {
                 routeInvalidResponse(routingContext);
             }
@@ -35,11 +35,10 @@ public class RegisterProcessor {
         }
     }
 
-    private String tryToEncryptPassword(RoutingContext routingContext, String password) {
+    private String tryToEncryptPassword(String password) {
         try {
             return encryptionService.encrypt(password);
         } catch (Exception ex) {
-            routeInternalErrorResponse(routingContext);
             return null;
         }
     }
@@ -48,7 +47,10 @@ public class RegisterProcessor {
         if(isUserExists) {
             jsonResponseWith(routingContext, 400)
                     .end(prepareMessage(DESCRIPTION_KEY, USER_EXISTS_MESSAGE));
-        } else {
+        } else if (password == null) {
+            routeInternalErrorResponse(routingContext);
+        }
+        else {
             userService.createUser(login, password, (result) -> routeSuccessfulResponse(routingContext));
         }
     }
