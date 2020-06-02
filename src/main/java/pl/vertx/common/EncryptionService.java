@@ -23,18 +23,18 @@ public class EncryptionService {
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
     }
 
-    private byte[] readKeyBytes() throws Exception {
-        ClassLoader classLoader = this.getClass().getClassLoader();
-        Path path = Paths.get(classLoader.getResource(keyFileName).toURI());
-
-        return Files.readAllBytes(path);
-    }
-
     public String encrypt(String value) throws Exception {
         byte[] valueBytes = value.getBytes();
         byte[] encryptedBytes = cipher.doFinal(valueBytes);
         byte[] encodedBase64Bytes = BASE64EncoderStream.encode(encryptedBytes);
 
         return new String(encodedBase64Bytes);
+    }
+
+    private byte[] readKeyBytes() throws Exception {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        Path path = Paths.get(classLoader.getResource(keyFileName).toURI());
+
+        return Files.readAllBytes(path);
     }
 }
